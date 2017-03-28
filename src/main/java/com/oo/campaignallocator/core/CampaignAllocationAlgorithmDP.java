@@ -5,13 +5,34 @@ import com.oo.campaignallocator.api.CampaignAllocationResponse;
 import java.lang.Math;
 import java.util.ArrayList;
 
+/**
+ * CampaignAllocationAlgorithmDP implements a campaign allocation algorithm
+ * using dynamic programming / 0-1 Knapsack approach. It follows the contact
+ * CampaignAllocationAlgorithmInterface so that it fits into the main
+ * application alongside other allocation algorithm.
+ * @author Akiz
+ */
 public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorithmInterface {
+    /**
+     * Holds the response object that is prepared suing the algorithm
+     */
     private CampaignAllocationResponse campaignAllocationResponse;
 
+    /**
+     * Creates a campaign algorithm DP object
+     */
     public CampaignAllocationAlgorithmDP() {
         this.campaignAllocationResponse = new CampaignAllocationResponse();
     }
 
+    /**
+     * Prepare response object that will be published through api
+     * main part of the response includes totalImpressions, totalRevenue and
+     * list of campaigns with their optimal count that produces the best revenue
+     * under monthly inventory constraint
+     * @param dpStore holds the required memory for the DP algorithm
+     * @param campaignAllocationRequest is the request/input object with campaign and inventory data
+     */
     private void prepareResponse(CampaignAllocationAlgorithmDPStore dpStore, CampaignAllocationRequest campaignAllocationRequest) {
         campaignAllocationResponse = new CampaignAllocationResponse();
         ArrayList<Campaign> campaigns = campaignAllocationRequest.getCampaigns();
@@ -31,6 +52,11 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
         campaignAllocationResponse.setCampaigns(campaigns);
     }
 
+    /**
+     * This is main method of the algorithm that finds the optimal list of campaigns
+     * resulting maximum revenue with given monthly inventory
+     * @param campaignAllocationRequest is the request/input object with campaign and inventory data
+     */
     public void run(CampaignAllocationRequest campaignAllocationRequest) {
         ArrayList<Campaign> campaigns = campaignAllocationRequest.getCampaigns();
         int totalCampaigns = campaigns.size();
@@ -61,6 +87,10 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
         prepareResponse(dpStore, campaignAllocationRequest);
     }
 
+    /**
+     * Gets the final response object prepared by run method
+     * @return campaignAllocationResponse final response
+     */
     public CampaignAllocationResponse getCampaignAllocationResponse() {
         return campaignAllocationResponse;
     }
