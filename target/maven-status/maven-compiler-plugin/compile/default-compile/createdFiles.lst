@@ -1,0 +1,9 @@
+com/oo/campaignallocator/core/CampaignAllocationAlgorithmDPStore.class
+com/oo/campaignallocator/api/CampaignAllocationRequest.class
+com/oo/campaignallocator/CampaignAllocatorConfiguration.class
+com/oo/campaignallocator/core/CampaignAllocationAlgorithmInterface.class
+com/oo/campaignallocator/CampaignAllocatorApplication.class
+com/oo/campaignallocator/core/Campaign.class
+com/oo/campaignallocator/core/CampaignAllocationAlgorithmDP.class
+com/oo/campaignallocator/api/CampaignAllocationResponse.class
+com/oo/campaignallocator/resources/CampaignAllocatorResource.class
