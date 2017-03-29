@@ -36,7 +36,8 @@ public class CampaignAllocatorResource {
      */
     @POST
     public CampaignAllocationResponse allocateCampaigns(CampaignAllocationRequest campaignAllocationRequest) {
-        campaignAllocationAlgorithm.run(campaignAllocationRequest);
+        campaignAllocationAlgorithm.init(campaignAllocationRequest);
+        campaignAllocationAlgorithm.run();
 
         return campaignAllocationAlgorithm.getCampaignAllocationResponse();
     }

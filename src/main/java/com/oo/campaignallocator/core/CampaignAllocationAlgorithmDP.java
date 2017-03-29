@@ -19,10 +19,37 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
     private CampaignAllocationResponse campaignAllocationResponse;
 
     /**
+     * Holds the request object that is used as input by the algorithm
+     */
+    private CampaignAllocationRequest campaignAllocationRequest;
+
+    /**
+     * Holds the scaling factor of large inventory amount
+     */
+    private int inventoryScaleFactor;
+
+    /**
+     * Maximum inventory amount supported without scaling
+     */
+    public static final int MAX_INVENTORY_AMOUNT = 99999999;
+
+    /**
      * Creates a campaign algorithm DP object
      */
     public CampaignAllocationAlgorithmDP() {
+    }
+
+    /**
+     * Initialize dp algorithm object with input and output object
+     * @param campaignAllocationRequest input object
+     */
+    public void init(CampaignAllocationRequest campaignAllocationRequest) {
+        this.campaignAllocationRequest = campaignAllocationRequest;
         this.campaignAllocationResponse = new CampaignAllocationResponse();
+        this.inventoryScaleFactor = 1;
+        if (campaignAllocationRequest.getMonthlyInventory() > CampaignAllocationAlgorithmDP.MAX_INVENTORY_AMOUNT) {
+            this.inventoryScaleFactor = 100;
+        }
     }
 
     /**
@@ -33,19 +60,21 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
      * @param dpStore holds the required memory for the DP algorithm
      * @param campaignAllocationRequest is the request/input object with campaign and inventory data
      */
-    private void prepareResponse(CampaignAllocationAlgorithmDPStore dpStore, CampaignAllocationRequest campaignAllocationRequest) {
+    private void prepareResponse(CampaignAllocationAlgorithmDPStore dpStore) {
         campaignAllocationResponse = new CampaignAllocationResponse();
         ArrayList<Campaign> campaigns = campaignAllocationRequest.getCampaigns();
         int totalCampaigns = campaigns.size();
         long totalImpressions = 0;
-        int monthlyInventory = campaignAllocationRequest.getMonthlyInventory();
+        int monthlyInventory = campaignAllocationRequest.getMonthlyInventory() / inventoryScaleFactor;
         campaignAllocationResponse.setTotalRevenue(dpStore.dpVector[monthlyInventory]);
-        for (int inventory = monthlyInventory; inventory > 0; --inventory) {
+        for (int inventory = monthlyInventory; inventory > 0;) {
             if(dpStore.pickedElementIndex[inventory] >= 0) {
                 Campaign campaign = campaigns.get(dpStore.pickedElementIndex[inventory]);
                 campaign.incrementCount();
                 totalImpressions += campaign.getImpressions();
-                inventory -= (campaign.getImpressions() + 1);
+                inventory -= (campaign.getImpressions() / inventoryScaleFactor);
+            } else {
+              inventory--;
             }
         }
         campaignAllocationResponse.setTotalImpressions(totalImpressions);
@@ -55,12 +84,11 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
     /**
      * This is main method of the algorithm that finds the optimal list of campaigns
      * resulting maximum revenue with given monthly inventory
-     * @param campaignAllocationRequest is the request/input object with campaign and inventory data
      */
-    public void run(CampaignAllocationRequest campaignAllocationRequest) {
+    public void run() {
         ArrayList<Campaign> campaigns = campaignAllocationRequest.getCampaigns();
         int totalCampaigns = campaigns.size();
-        int monthlyInventory = campaignAllocationRequest.getMonthlyInventory();
+        int monthlyInventory = campaignAllocationRequest.getMonthlyInventory() / inventoryScaleFactor;
         CampaignAllocationAlgorithmDPStore dpStore = new CampaignAllocationAlgorithmDPStore(monthlyInventory + 1);
 
         if(totalCampaigns <= 0 || monthlyInventory <= 0) {
@@ -70,11 +98,11 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
         dpStore.pickedElementIndex[0] = -1;
         for (int inventory = 1; inventory <= monthlyInventory; ++inventory) {
             dpStore.dpVector[inventory] = dpStore.dpVector[inventory - 1];
-            dpStore.pickedElementIndex[inventory] = dpStore.pickedElementIndex[inventory - 1];
+            dpStore.pickedElementIndex[inventory] = -1;
             for (int campaignIndex = 0; campaignIndex < totalCampaigns; ++campaignIndex) {
                 Campaign campaign = campaigns.get(campaignIndex);
                 int campaignRevenue = campaign.getRevenue();
-                int campaignImpressions = campaign.getImpressions();
+                int campaignImpressions = campaign.getImpressions() / inventoryScaleFactor;
                 if (campaignImpressions <= inventory) {
                     int pickedRevenue = campaignRevenue + dpStore.dpVector[inventory - campaignImpressions];
                     if (pickedRevenue > dpStore.dpVector[inventory]) {
@@ -84,7 +112,7 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
                 }
             }
         }
-        prepareResponse(dpStore, campaignAllocationRequest);
+        prepareResponse(dpStore);
     }
 
     /**

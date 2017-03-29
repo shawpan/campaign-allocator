@@ -9,12 +9,19 @@ import com.oo.campaignallocator.api.CampaignAllocationResponse;
  * @author Akiz
  */
 public interface CampaignAllocationAlgorithmInterface {
+
+    /**
+     * This method provides the signature of the method to initialize the
+     * algorithm in any class that can be used as campaign allocation algorithm
+     * @param campaignAllocationRequest is the input object
+     */
+    public void init(CampaignAllocationRequest campaignAllocationRequest);
+
     /**
      * This method provides the signature of the method to run the algorithm
      * in any class that can be used as campaign allocation algorithm
-     * @param campaignAllocationRequest is the input object
      */
-    public void run(CampaignAllocationRequest campaignAllocationRequest);
+    public void run();
 
     /**
      * This method provides the signature of the method to get the final output object
