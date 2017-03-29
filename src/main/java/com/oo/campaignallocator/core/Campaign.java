@@ -50,6 +50,18 @@ public class Campaign {
     }
 
     /**
+     * Creates a campaign representation with customer name, impressions, revenue
+     * @param customerName name of customer
+     * @param impressions unit number of impressions per campaign
+     * @param revenue revenue of the impressions
+     */
+    public Campaign(String customerName, int impressions, int revenue) {
+        this.customerName = customerName;
+        this.impressions = impressions;
+        this.revenue = revenue;
+    }
+
+    /**
      * Get customer name
      * @return customerName name of customer
      */

@@ -1,8 +1,6 @@
 package com.oo.campaignallocator.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
-import java.util.List;
 import java.util.ArrayList;
 import com.oo.campaignallocator.core.Campaign;
 
