@@ -3,9 +3,11 @@
 Problem definition and goal
 ---
 Given monthly inventory amount and a list of campaigns with curstomer name, unit amount of impressions and corresponding proce, find the best set of campaigns that will generate maximum revenue not exceeding monthly inventory. 
+
 Response time goals:
 - not more than 3 seconds (best case)
 - 1 minute (worst case)
+
 Memory goals:
 - Heap size less than 4GB
 
