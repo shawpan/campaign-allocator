@@ -45,10 +45,45 @@ public class CampaignAllocationAlgorithmDP implements CampaignAllocationAlgorith
     public void init(CampaignAllocationRequest campaignAllocationRequest) {
         this.campaignAllocationRequest = campaignAllocationRequest;
         this.campaignAllocationResponse = new CampaignAllocationResponse();
-        this.inventoryScaleFactor = 1;
-        if (campaignAllocationRequest.getMonthlyInventory() > CampaignAllocationAlgorithmDP.MAX_INVENTORY_AMOUNT) {
+        this.inventoryScaleFactor = findInventoryScalefactor();
+        if ((campaignAllocationRequest.getMonthlyInventory() / this.inventoryScaleFactor) > CampaignAllocationAlgorithmDP.MAX_INVENTORY_AMOUNT) {
             this.inventoryScaleFactor = 100;
         }
+    }
+
+    /**
+     * Find greatest common divisor of two numbers
+     * @param firstNumber first number
+     * @param secondNumber second number
+     * @return greatest common divisor of firstNumber and secondNumber
+     */
+    private int greatestCommonDivisor(int firstInventory, int secondInventory) {
+        int firstNumber = Math.max(firstInventory,secondInventory);
+        int secondNumber = Math.min(firstInventory,secondInventory);
+
+        while (secondNumber != 0) {
+           int remainder = firstNumber % secondNumber;
+           firstNumber = secondNumber;
+           secondNumber = remainder;
+        }
+
+        return firstNumber;
+    }
+    /**
+     * Find scale factor
+     * return greatest common divisor that can divide all the impressions in question
+     */
+    private int findInventoryScalefactor() {
+        ArrayList<Campaign> campaigns = campaignAllocationRequest.getCampaigns();
+        int firstNumber = campaignAllocationRequest.getMonthlyInventory();
+        for(Campaign campaign:campaigns) {
+            firstNumber = greatestCommonDivisor(firstNumber, campaign.getImpressions());
+            if(firstNumber == 1) {
+                return 1;
+            }
+        }
+
+        return firstNumber;
     }
 
     /**
