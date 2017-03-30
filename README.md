@@ -13,13 +13,13 @@ Memory goals:
 
 Algorithm/ Solution
 ---
-This is a case of classic 0-1 Knapsack problem with repeating elements. Dynamic Programming (DP) works best with O(inventoryAmount * numberOfCampaigns) runtime and O(inventoryAmount) memory. However when the numbers are too large it becomes a NP-Complete, even NP-Hard problem. Therefore, different algorithms should be used based on request data such as DP for tractable size and branch-bound approach for large numbers within close range having tractable number of campaigns.
+This is a case of classic 0-1 Knapsack problem with repeating elements. Dynamic Programming (DP) works best with `O(inventoryAmount * numberOfCampaigns)` runtime and `O(inventoryAmount)` memory. However when the numbers are too large it becomes a NP-Complete, even NP-Hard problem. Therefore, different algorithms should be used based on request data such as DP for tractable size and branch-bound approach for large numbers within close range having tractable number of campaigns.
 
 DP Approach
 ---
 DP solution is implemented in `CampaignAllocationAlgorithmDP` class with some further optimization. Steps
--- Scale the inventory numbers dividing by Greatest Common Divisor of monthly inventory amount and all the unit impression amount of campaigns. This will significantly reduce the run time and memory unless GCD is 1. If the monthly inventory is still too large after scaling, consider scale factor = 100 which will make the DP solution feasible under current constraints but lose data upto 2 digits a nd find a near optimal solution.
-Runt time is O(inventoryAmount/ inventoryScaleFactor * numberOfCampaigns) and memory is 2 * O(inventoryAmount/ inventoryScaleFactor)
+- Scale the inventory numbers dividing by Greatest Common Divisor of monthly inventory amount and all the unit impression amount of campaigns. This will significantly reduce the run time and memory unless GCD is 1. If the monthly inventory is still too large after scaling, consider scale factor = 100 which will make the DP solution feasible under current constraints but lose data upto 2 digits a nd find a near optimal solution.
+Runt time is `O(inventoryAmount/ inventoryScaleFactor * numberOfCampaigns)` and memory is `2 * O(inventoryAmount/ inventoryScaleFactor)`
 
 Sample results
 ---
