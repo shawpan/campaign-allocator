@@ -2,7 +2,7 @@
 
 Problem definition and goal
 ---
-Given monthly inventory amount and a list of campaigns with curstomer name, unit amount of impressions and corresponding proce, find the best set of campaigns that will generate maximum revenue not exceeding monthly inventory. 
+Given monthly inventory amount and a list of campaigns with curstomer name, unit amount of impressions and corresponding price, find the best set of campaigns that will generate maximum revenue not exceeding monthly inventory. 
 
 Response time goals:
 - not more than 3 seconds (best case)
@@ -20,6 +20,11 @@ DP Approach
 DP solution is implemented in `CampaignAllocationAlgorithmDP` class with some further optimization. Steps
 - Scale the inventory numbers dividing by Greatest Common Divisor of monthly inventory amount and all the unit impression amount of campaigns. This will significantly reduce the run time and memory unless GCD is 1. If the monthly inventory is still too large after scaling, consider scale factor = 100 which will make the DP solution feasible under current constraints but lose data upto 2 digits a nd find a near optimal solution.
 Runt time is `O(inventoryAmount/ inventoryScaleFactor * numberOfCampaigns)` and memory is `2 * O(inventoryAmount/ inventoryScaleFactor)`
+
+TODO Improvements
+---
+- Investigate other approaches like branch-bound, genetic algorithm etc.
+- Investigate to use distributed/ concurrent implementations. 
 
 Sample results
 ---
